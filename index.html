@@ -33,9 +33,55 @@
         const createScene =  () => {
         const scene = new BABYLON.Scene(engine);
         const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new BABYLON.Vector3(0, 0, 0));
+        //const camera = new BABYLON.UniversalCamera("viewCamera", new BABYLON.Vector3(0, 3, -3), scene);
         camera.attachControl(canvas, true);
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0));
         const box = BABYLON.MeshBuilder.CreateBox("box", {});
+        const cap = BABYLON.MeshBuilder.CreateCapsule("cap1", {height: 2, radius: 0.25, subdivisions: 12});
+        cap.position = new BABYLON.Vector3(1, 0, 3);
+
+        // scene interactions, mouse/pointer
+            scene.onPointerObservable.add((pointerInfo) => {
+		switch (pointerInfo.type) {
+			case BABYLON.PointerEventTypes.POINTERDOWN:
+				console.log("POINTER DOWN");
+                // cast a ray
+                castRay();
+				break;
+			case BABYLON.PointerEventTypes.POINTERUP:
+				console.log("POINTER UP");
+				break;
+			case BABYLON.PointerEventTypes.POINTERMOVE:
+				console.log("POINTER MOVE");
+				break;
+			case BABYLON.PointerEventTypes.POINTERWHEEL:
+				console.log("POINTER WHEEL");
+				break;
+			case BABYLON.PointerEventTypes.POINTERPICK:
+				console.log("POINTER PICK");
+				break;
+			case BABYLON.PointerEventTypes.POINTERTAP:
+				console.log("POINTER TAP");
+				break;
+			case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
+				console.log("POINTER DOUBLE-TAP");
+				break;
+        }
+    });
+
+        // scene interactions, keyboard
+        	scene.onKeyboardObservable.add((kbInfo) => {
+		switch (kbInfo.type) {
+			case BABYLON.KeyboardEventTypes.KEYDOWN:
+				console.log("KEY DOWN: ", kbInfo.event.key);
+				break;
+			case BABYLON.KeyboardEventTypes.KEYUP:
+				console.log("KEY UP: ", kbInfo.event.keyCode);
+				break;
+		}
+	});
+
+
         return scene;
         }
 
@@ -50,6 +96,9 @@
                 engine.resize();
         });
    
+        function castRay() {
+            const ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON)
+        }
 
     </script>
    </body>
